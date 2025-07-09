@@ -42,6 +42,7 @@ body {
 /* Product Grid */
 .product-grid {
     display:flex;
+    margin-top: 1rem;
     flex-direction: column;
     width: 100vw;
     align-items: center;
