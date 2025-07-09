@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector} from "react-redux";
 import { addItem } from "./CartSlice"; // Import the action to add items to the
+
 function ProductList({ onHomeClick }) {
   const [showCart, setShowCart] = useState(false);
   const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
   const [addedToCart, setAddedToCart] = useState({});
+  const cart = useSelector(state => state.cart.items);
+
     const dispatch = useDispatch();
 
   const handleAddToCart = (product) => {
@@ -19,9 +22,10 @@ function ProductList({ onHomeClick }) {
     }));
   };
 
-//   const calculateTotalQuantity = () => {
-//  return cart ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
-//   };
+  const calculateTotalQuantity = () => {
+    
+ return cart ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
+  };
 
   const plantsArray = [
     {
@@ -353,6 +357,8 @@ function ProductList({ onHomeClick }) {
                     id="mainIconPathAttribute"
                   ></path>
                 </svg>
+                { calculateTotalQuantity() }
+                
               </h1>
             </a>
           </div>
@@ -379,8 +385,10 @@ function ProductList({ onHomeClick }) {
                     (
                       plant,
                       plantIndex // Loop through each plant in the current category
-                    ) => (
-                      <div className="product-card" key={plantIndex}>
+                    ) => {
+                      const isInCart = cart.some(item => item.name === plant.name);
+                      return (
+                        <div className="product-card" key={plantIndex}>
                         {" "}
                         {/* Unique key for each plant card */}
                         <img
@@ -397,14 +405,19 @@ function ProductList({ onHomeClick }) {
                         {/* Display plant description */}
                         <div className="product-cost">${plant.cost}</div>{" "}
                         {/* Display plant cost */}
-                        <button
-                          className="product-button"
-                          onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
-                        >
-                          Add to Cart
-                        </button>
+                         <button
+                        className="product-button"
+                        onClick={() => handleAddToCart(plant)}
+                        disabled={isInCart}
+                        style={{
+                          backgroundColor: isInCart ? 'gray' : '#4CAF50',
+                          cursor: isInCart ? 'not-allowed' : 'pointer',
+                        }}
+                      >
+                        {isInCart ? 'Added to Cart' : 'Add to Cart'}
+                      </button>
                       </div>
-                    )
+                    )}
                   )}
                 </div>
               </div>
