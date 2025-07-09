@@ -9,7 +9,6 @@ function ProductList({ onHomeClick }) {
   const [addedToCart, setAddedToCart] = useState({});
     const dispatch = useDispatch();
 
-
   const handleAddToCart = (product) => {
     dispatch(addItem(product)); // Dispatch the action to add the product to the cart (Redux action)
 
@@ -18,6 +17,10 @@ function ProductList({ onHomeClick }) {
       ...prevState, // Spread the previous state to retain existing entries
       [product.name]: true, // Set the current product's name as a key with value 'true' to mark it as added
     }));
+  };
+
+  const calculateTotalQuantity = () => {
+ return cart ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
   };
 
   const plantsArray = [
